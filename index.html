@@ -7,6 +7,19 @@
   </head>
   <body>
     <div id="app"></div>
+    <script>
+      (function(){
+        if ('serviceWorker' in navigator) {
+          const cleaned = sessionStorage.getItem('sw-cleaned');
+          navigator.serviceWorker.getRegistrations().then(regs => {
+            if (regs && regs.length) {
+              regs.forEach(r => r.unregister().catch(()=>{}));
+              if (!cleaned) { sessionStorage.setItem('sw-cleaned','1'); location.reload(); }
+            }
+          }).catch(()=>{});
+        }
+      })();
+    </script>
   <script type="module" src="./src/main.ts"></script>
   </body>
 </html>
