@@ -9,9 +9,9 @@ export default defineConfig({
   plugins: [svelte()],
   base,
   server: {
-    port: 5174,
+  port: 5189,
     strictPort: true,
     host: true,
-    open: true,
+  open: '/NEWTRY2/',
   },
 });
