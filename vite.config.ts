@@ -8,4 +8,10 @@ const base = process.env.VITE_BASE ?? '/NEWTRY2/';
 export default defineConfig({
   plugins: [svelte()],
   base,
+  server: {
+    port: 5174,
+    strictPort: true,
+    host: true,
+    open: true,
+  },
 });

@@ -2,7 +2,7 @@
 
 export function ollamaAi(opts?: { host?: string; model?: string }) {
   const host = opts?.host ?? 'http://127.0.0.1:11434';
-  const model = opts?.model ?? 'gemma:2b';
+  const model = opts?.model ?? 'gemma3:1b';
   return {
     async chat(input: string): Promise<string> {
       try {

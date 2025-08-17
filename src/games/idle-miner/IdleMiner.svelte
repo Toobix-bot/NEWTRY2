@@ -1,17 +1,21 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import { ai } from '../../core/ai';
+  import { load, save } from '../../core/storage';
 
-  let ore = 0;
-  let orePerClick = 1;
-  let orePerSecond = 0;
-  let pickaxeLevel = 1;
-  let miners = 0;
+  type IMState = { ore: number; orePerClick: number; orePerSecond: number; pickaxeLevel: number; miners: number };
+  let state: IMState = load<IMState>('idle', { ore: 0, orePerClick: 1, orePerSecond: 0, pickaxeLevel: 1, miners: 0 });
+  let { ore, orePerClick, orePerSecond, pickaxeLevel, miners } = state;
   let tip = '';
   let lastTick = performance.now();
 
+  function persist() {
+    save('idle', { ore, orePerClick, orePerSecond, pickaxeLevel, miners });
+  }
+
   function mine() {
-    ore += orePerClick;
+  ore += orePerClick;
+  persist();
   }
 
   function buyPickaxe() {
@@ -20,6 +24,7 @@
       ore -= cost;
       pickaxeLevel += 1;
       orePerClick += 1;
+  persist();
     }
   }
 
@@ -29,17 +34,21 @@
       ore -= cost;
       miners += 1;
       recalc();
+  persist();
     }
   }
 
   function recalc() {
     orePerSecond = miners * 0.5;
+  persist();
   }
 
   function loop(now: number) {
     const dt = Math.min(1, (now - lastTick) / 1000);
     ore += orePerSecond * dt;
     lastTick = now;
+  // save occasionally
+  if (Math.random() < 0.1) persist();
     requestAnimationFrame(loop);
   }
 
